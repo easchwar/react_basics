@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>So. Much. React.</title>
+  <script src="https://fb.me/react-0.13.3.js"></script>
+  <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+</head>
+<body>
+  <div id='my-component'></div>
+  <script type="text/jsx">
+    var Tabs = React.createClass({
+      getInitialState: function () {
+        return {tabIdx: 0};
+      },
+
+      handleClick: function (e) {
+        this.setState({tabIdx: e.currentTarget.dataset.id});
+      },
+
+      render: function () {
+        return (
+          <div>
+            <div className='header'>
+              {
+                this.props.tabs.map(function (tab, i) {
+                  return (
+                    <span onClick={this.handleClick} key={i} data-id={i}> {tab.title} </span>
+                  )
+                }.bind(this))
+              }
+            </div>
+            <div className='content'>
+              <p>{this.props.tabs[this.state.tabIdx].content}</p>
+            </div>
+          </div>
+        )
+      }
+    });
+
+    bigString = "lots of text going on and on on on od lk hjgslf hkursg lslrji jlugs \n sjdlg jsogu hjgrsu"
+    bigString += "\n \n \n \n more stuff down here \n \n \n \n and here"
+
+    var myTabs = [
+      {title: 'React!', content: 'Is so fun!'},
+      {title: 'Testing', content: 'This shiz'},
+      {title: 'Long tab', content: bigString}
+    ];
+
+    React.render(
+      <Tabs tabs={myTabs} />,
+      document.getElementById('my-component')
+    );
+  </script>
+</body>
+</html>

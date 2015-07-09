@@ -7,9 +7,20 @@
   <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
 </head>
 <body>
-  <div id='clock'></div>
-  <div id='weather'></div>
+  <div id='weatherclock'></div>
   <script type="text/jsx">
+  var WeatherClock = React.createClass({
+
+    render: function() {
+      return (
+        <div>
+          <Clock/>
+          <br/>
+          <Weather/>
+        </div>
+      )
+    }
+  });
   var Clock = React.createClass({
     getInitialState: function() {
       return {time: (new Date()).toString()};
@@ -36,7 +47,7 @@
 
   var Weather = React.createClass({
     getInitialState: function () {
-      return {weather: {}, location: {}};
+      return {weather: null, location: {}};
     },
 
     componentDidMount: function() {
@@ -71,8 +82,8 @@
     },
 
     render: function () {
-      if (this.state.weather.weather === undefined) {
-        return <div></div>
+      if (!this.state.weather) {
+        return <div>fetching weather...</div>
       }
       return (
         <div>
@@ -92,14 +103,10 @@
   });
 
   React.render(
-    <Clock />,
-    document.getElementById('clock')
+    <WeatherClock />,
+    document.getElementById('weatherclock')
   );
 
-  React.render(
-    <Weather />,
-    document.getElementById('weather')
-  );
   </script>
 </body>
 </html>
