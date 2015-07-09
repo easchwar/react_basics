@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>react!!!!!!!!!!</title>
+
+  <script src="https://fb.me/react-0.13.3.js"></script>
+  <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+</head>
+<body>
+  <div id='clock'></div>
+  <div id='weather'></div>
+  <script type="text/jsx">
+  var Clock = React.createClass({
+    getInitialState: function() {
+      return {time: (new Date()).toString()};
+    },
+
+    componentDidMount: function() {
+      this.interval = setInterval(this.updateTime, 1000);
+    },
+
+    componentWillUnmount: function() {
+      clearInterval(this.interval);
+    },
+
+    updateTime: function () {
+      this.setState({time: (new Date()).toString()});
+    },
+
+    render: function() {
+      return (
+        <span>{this.state.time}</span>
+      )
+    }
+  });
+
+  var Weather = React.createClass({
+    getInitialState: function () {
+      return {weather: {}, location: {}};
+    },
+
+    componentDidMount: function() {
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        this.setState({location: pos.coords});
+        this.updateWeather();
+      }.bind(this));
+
+    },
+
+    updateWeather: function() {
+      xmlhttp = new XMLHttpRequest();
+
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+          if (xmlhttp.status === 200) {
+            console.log(xmlhttp.response);
+            resp = JSON.parse(xmlhttp.response)
+            console.log(resp);
+            this.setState({weather: resp});
+            console.log(this.state);
+          } else {
+            console.log(xmlhttp);
+            alert('shit');
+          }
+        }
+      }.bind(this);
+      url = 'http://api.openweathermap.org/data/2.5/weather?lat='
+      url += this.state.location.latitude + '&lon=' + this.state.location.longitude
+      xmlhttp.open('GET', url);
+      xmlhttp.send();
+    },
+
+    render: function () {
+      if (this.state.weather.weather === undefined) {
+        return <div></div>
+      }
+      return (
+        <div>
+          <div>
+            <span>Temp: {this.state.weather.main.temp} K</span>
+            <br/>
+            <span>Main: {this.state.weather.weather[0].main}</span>
+            <br/>
+            <span>Description: {this.state.weather.weather[0].description}</span>
+          </div>
+          <div>
+            <span>{this.state.location.latitude}, {this.state.location.longitude}</span>
+          </div>
+        </div>
+      )
+    }
+  });
+
+  React.render(
+    <Clock />,
+    document.getElementById('clock')
+  );
+
+  React.render(
+    <Weather />,
+    document.getElementById('weather')
+  );
+  </script>
+</body>
+</html>
