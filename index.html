@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>React!</title>
+    <script src="https://fb.me/react-0.13.3.js"></script>
+    <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+  </head>
+  <body>
+    <script type="text/jsx">
+      var AutoComplete = React.createClass({
+        getInitialState: function() {
+          return {filter: ''};
+        },
+
+        handleInputChange: function(e) {
+          this.setState({filter: e.currentTarget.value});
+        },
+
+        handleClick: function(e) {
+          this.setState({filter: e.currentTarget.innerText})
+        },
+
+        render: function() {
+          var items = this.props.listItems;
+
+          var filteredItems = items.filter(function(item){
+            var n = this.state.filter.length;
+            if (n === 0) {
+              return true;
+            }
+            return item.substring(0, n) === this.state.filter;
+          }.bind(this));
+
+          return (
+            <div>
+              <input type="text" name="name"
+                value={this.state.filter}
+                onChange={this.handleInputChange} />
+
+              <ul>
+                {
+                  filteredItems.map(function(item) {
+                    return (
+                      <li key={item} onClick={this.handleClick}>{item}</li>
+                    );
+                  }.bind(this))
+                }
+              </ul>
+            </div>
+          );
+        },
+      });
+
+      var listItems = ['hi', 'hip', 'hot', 'boy', 'bot'];
+
+      React.render(
+        <AutoComplete listItems={listItems}/>,
+        document.body
+      )
+
+    </script>
+  </body>
+</html>
